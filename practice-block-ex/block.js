@@ -25,10 +25,16 @@
       */
        // 
        generateHash() {
-           // Use this to create a temporary reference of the class object
-           let self = this;
-           self.hash = SHA256(JSON.stringify(self)).toString();
-           return self.hash;
+            let self = this;
+            return new Promise(function(resolve, reject) {
+                self.hash = SHA256(JSON.stringify(self)).toString();
+                if (self) {
+                    resolve(self);
+                }
+                else {
+                    reject(self)
+                }
+            });
         }
  }
  
