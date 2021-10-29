@@ -17,7 +17,7 @@ class Block {
     // Constructor - argument data will be the object containing the transaction data
 	constructor(data){
 		this.hash = null;                                           // Hash of the block
-		this.height = 0;                                            // Block Height (consecutive number of each block)
+		this.height = 1;                                            // Block Height (consecutive number of each block)
 		this.body = Buffer.from(JSON.stringify(data)).toString('hex');   // Will contain the transactions stored in the block, by default it will encode the data
 		this.time = 0;                                              // Timestamp for the Block creation
 		this.previousBlockHash = null;                              // Reference to the previous Block Hash
@@ -34,18 +34,19 @@ class Block {
      *  4. Compare if the auxiliary hash value is different from the calculated one.
      *  5. Resolve true or false depending if it is valid or not.
      *  Note: to access the class values inside a Promise code you need to create an auxiliary value `let self = this;`
-     */
+    */
     validate() {
         let self = this;
         return new Promise((resolve, reject) => {
-            let currHash = this.hash
-            let calcHash = SHA256(JSON.stringify(this.body)).toString();
-                                            
-            if (currHash == calcHash) {
+            let calcHash = SHA256(JSON.stringify(this)).toString();
+            console.log('this.hash is:', this.hash);
+            console.log('calc hash is:', calcHash);
+            
+            if (this.hash == calcHash) {
                 resolve('match');
             }
             else {
-                reject('no match');
+                reject(this);
             }
         });
     }
@@ -60,14 +61,22 @@ class Block {
      *     or Reject with an error.
      */
     getBData() {
-        // Getting the encoded data saved in the Block
-        // Decoding the data to retrieve the JSON representation of the object
-        // Parse the data to an object to be retrieve.
-
-        // Resolve with the data if the object isn't the Genesis block
-
+        let self = this;
+        return new Promise((resolve, reject) => {
+            let decodedBody = hex2ascii(this.body);
+            // let decodedObject = JSON.parse(decodedBody);
+            
+            if (this.height > 0) {
+                resolve(decodedBody);
+            }
+            else {
+                reject();
+            }
+        });
     }
-
 }
 
 module.exports.Block = Block;                    // Exposing the Block class as a module
+
+
+// let hash = SHA256(JSON.stringify(myBlock)).toString();
