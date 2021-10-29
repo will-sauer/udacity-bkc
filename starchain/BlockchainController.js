@@ -16,6 +16,7 @@ class BlockchainController {
         this.submitStar();
         this.getBlockByHash();
         this.getStarsByOwner();
+        this.getHello();
     }
 
     // Enpoint to Get a Block by Height (GET Endpoint)
@@ -115,6 +116,12 @@ class BlockchainController {
             }
             
         });
+    }
+
+    getHello() {
+        this.app.get("/hello", async (req, res) => {
+            return res.status(200).json("hello world");
+        })
     }
 
 }
