@@ -38,7 +38,7 @@ class Block {
     validate() {
         let self = this;
         return new Promise((resolve, reject) => {
-            let calcHash = SHA256(JSON.stringify(this)).toString();
+            let calcHash = SHA256(JSON.stringify(this.body)).toString();
             console.log('this.hash is:', this.hash);
             console.log('calc hash is:', calcHash);
             
