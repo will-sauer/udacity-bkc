@@ -13,6 +13,7 @@ const bodyParser = require("body-parser");
  * Require the Blockchain class. This allow us to have only one instance of the class.
  */
 const BlockChain = require('./src/blockchain.js');
+const { Block } = require("./src/block.js");
 
 class ApplicationServer {
 
@@ -55,3 +56,4 @@ class ApplicationServer {
 }
 
 new ApplicationServer();
+

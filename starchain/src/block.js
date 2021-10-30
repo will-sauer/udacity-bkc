@@ -17,7 +17,7 @@ class Block {
     // Constructor - argument data will be the object containing the transaction data
 	constructor(data){
 		this.hash = null;                                           // Hash of the block
-		this.height = 1;                                            // Block Height (consecutive number of each block)
+		this.height = 0;                                            // Block Height (consecutive number of each block)
 		this.body = Buffer.from(JSON.stringify(data)).toString('hex');   // Will contain the transactions stored in the block, by default it will encode the data
 		this.time = 0;                                              // Timestamp for the Block creation
 		this.previousBlockHash = null;                              // Reference to the previous Block Hash
@@ -38,15 +38,15 @@ class Block {
     validate() {
         let self = this;
         return new Promise((resolve, reject) => {
-            let calcHash = SHA256(JSON.stringify(this.body)).toString();
-            console.log('this.hash is:', this.hash);
-            console.log('calc hash is:', calcHash);
+            let dupeBlock = Object.assign({}, this);
+            dupeBlock.hash = null
+            let calcHash = SHA256(JSON.stringify(dupeBlock)).toString();
             
             if (this.hash == calcHash) {
-                resolve('match');
+                resolve(true);
             }
             else {
-                reject(this);
+                reject(false);
             }
         });
     }
@@ -64,8 +64,7 @@ class Block {
         let self = this;
         return new Promise((resolve, reject) => {
             let decodedBody = hex2ascii(this.body);
-            // let decodedObject = JSON.parse(decodedBody);
-            
+
             if (this.height > 0) {
                 resolve(decodedBody);
             }
@@ -74,9 +73,14 @@ class Block {
             }
         });
     }
+
+    incrementHeight() {
+        this.height++;
+    }
+
+    generateInitialHash() {
+        this.hash = SHA256(JSON.stringify(this)).toString();
+    }
 }
 
 module.exports.Block = Block;                    // Exposing the Block class as a module
-
-
-// let hash = SHA256(JSON.stringify(myBlock)).toString();
