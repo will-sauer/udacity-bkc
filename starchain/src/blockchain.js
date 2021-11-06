@@ -17,7 +17,7 @@ class Blockchain {
     /**
      * Constructor of the class, you will need to setup your chain array and the height
      * of your chain (the length of your chain array).
-     * Also everytime you create a Blockchain class you will need to initialized the chain creating
+     * Also everytime you create a Blockchain class you will need to initialize the chain creating
      * the Genesis Block.
      * The methods in this class will always return a Promise to allow client applications or
      * other backends to call asynchronous functions.
@@ -36,7 +36,7 @@ class Blockchain {
     async initializeChain() {
         if( this.height === -1){
             let block = new BlockClass.Block({data: 'Genesis Block'});
-            await this._addBlock(block);
+            await this.addBlock(block);
         }
     }
 
@@ -61,10 +61,36 @@ class Blockchain {
      * Note: the symbol `_` in the method name indicates in the javascript convention 
      * that this method is a private method. 
      */
-    _addBlock(block) {
+    addBlock(block) {
         let self = this;
         return new Promise(async (resolve, reject) => {
-           
+            //note block comes in w just body
+
+            //set time stamp
+            block.time = Math.floor(+new Date() / 1000)
+            
+            //set prv block hash
+            if (this.height == -1){
+                block.previousBlockHash = 0;
+            }
+            //prev blockhash is hash of newest block
+            else {
+                block.previousBlockHash = this.chain[this.height].hash;
+            }
+                
+            //set block height
+            block.height = this.height + 1
+
+            //generate hash
+            block.generateInitialHash();
+
+            //push block to array
+            this.chain.push(block);    
+
+            //increment chain height
+            this.height++;
+
+            resolve(block);
         });
     }
 

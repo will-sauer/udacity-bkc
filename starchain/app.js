@@ -55,5 +55,10 @@ class ApplicationServer {
 
 }
 
-new ApplicationServer();
+let app = new ApplicationServer();
+
+mb = new Block('notagin');
+app.blockchain.addBlock(mb).then(function(block) {
+	console.log(JSON.stringify(block))
+});
 
