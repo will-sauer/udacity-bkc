@@ -12,6 +12,7 @@ const SHA256 = require('crypto-js/sha256');
 const BlockClass = require('./block.js');
 const bitcoinMessage = require('bitcoinjs-message');
 
+
 class Blockchain {
 
     /**
@@ -96,15 +97,15 @@ class Blockchain {
 
     /**
      * The requestMessageOwnershipVerification(address) method
-     * will allow you  to request a message that you will use to
-     * sign it with your Bitcoin Wallet (Electrum or Bitcoin Core)
-     * This is the first step before submit your Block.
-     * The method return a Promise that will resolve with the message to be signed
+     * will allow you  to request a message that you will sign
+     * with your Bitcoin Wallet (Electrum or Bitcoin Core)
+     * This is the first step before submitting your Block.
+     * The method will return a Promise that will resolve with the message to be signed
      * @param {*} address 
      */
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
-            
+            resolve(`<WALLET_ADRESS>:${new Date().getTime().toString().slice(0,-3)}:starRegistry`);
         });
     }
 

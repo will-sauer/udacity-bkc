@@ -57,8 +57,9 @@ class ApplicationServer {
 
 let app = new ApplicationServer();
 
+
 mb = new Block('notagin');
-app.blockchain.addBlock(mb).then(function(block) {
-	console.log(JSON.stringify(block))
+app.blockchain.requestMessageOwnershipVerification().then(function(msg) {
+	console.log(JSON.stringify(msg))
 });
 
