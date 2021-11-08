@@ -151,11 +151,12 @@ class Blockchain {
      * Search on the chain array for the block that has the hash.
      * @param {*} hash 
      */
-    getBlockByHash(hash) {
+    getBlockByHash(queryHash) {
         let self = this;
         return new Promise((resolve, reject) => {
-           
+            resolve(this.chain.find( ({ hash }) => hash === queryHash ));
         });
+
     }
 
     /**
