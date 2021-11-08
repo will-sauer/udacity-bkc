@@ -57,9 +57,12 @@ class ApplicationServer {
 
 let app = new ApplicationServer();
 
+mb = new Block('notagain');
+app.blockchain.addBlock(mb).then(function(block) {
+	console.log(JSON.stringify(block))
+});
 
-mb = new Block('notagin');
-app.blockchain.requestMessageOwnershipVerification().then(function(msg) {
-	console.log(JSON.stringify(msg))
+app.blockchain.submitStar('123', 'afjls;kdas', 'ajlk;fff', {star: 'ajdfk'}).then(function(block) {
+	console.log(JSON.stringify(block));
 });
 

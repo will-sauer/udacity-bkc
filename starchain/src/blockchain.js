@@ -66,8 +66,6 @@ class Blockchain {
         let self = this;
         return new Promise(async (resolve, reject) => {
             //note block comes in w just body
-
-            //set time stamp
             block.time = Math.floor(+new Date() / 1000)
             
             //set prv block hash
@@ -81,13 +79,10 @@ class Blockchain {
                 
             //set block height
             block.height = this.height + 1
-
             //generate hash
             block.generateInitialHash();
-
             //push block to array
             this.chain.push(block);    
-
             //increment chain height
             this.height++;
 
@@ -96,12 +91,12 @@ class Blockchain {
     }
 
     /**
-     * The requestMessageOwnershipVerification(address) method
-     * will allow you  to request a message that you will sign
-     * with your Bitcoin Wallet (Electrum or Bitcoin Core)
-     * This is the first step before submitting your Block.
-     * The method will return a Promise that will resolve with the message to be signed
-     * @param {*} address 
+         * The requestMessageOwnershipVerification(address) method
+         * will allow you  to request a message that you will sign
+         * with your Bitcoin Wallet (Electrum or Bitcoin Core)
+         * This is the first step before submitting your Block.
+         * The method will return a Promise that will resolve with the message to be signed
+         * @param {*} address 
      */
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
@@ -110,26 +105,43 @@ class Blockchain {
     }
 
     /**
-     * The submitStar(address, message, signature, star) method
-     * will allow users to register a new Block with the star object
-     * into the chain. This method will resolve with the Block added or
-     * reject with an error.
-     * Algorithm steps:
-     * 1. Get the time from the message sent as a parameter example: `parseInt(message.split(':')[1])`
-     * 2. Get the current time: `let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));`
-     * 3. Check if the time elapsed is less than 5 minutes
-     * 4. Veify the message with wallet address and signature: `bitcoinMessage.verify(message, address, signature)`
-     * 5. Create the block and add it to the chain
-     * 6. Resolve with the block added.
-     * @param {*} address 
-     * @param {*} message 
-     * @param {*} signature 
-     * @param {*} star 
+         * The submitStar(address, message, signature, star) method
+         * will allow users to register a new Block with the star object
+         * into the chain. This method will resolve with the Block added or
+         * reject with an error.
+         * Algorithm steps:
+         * 1. Get the time from the message sent as a parameter example: `parseInt(message.split(':')[1])`
+         * 2. Get the current time: `let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));`
+         * 3. Check if the time elapsed is less than 5 minutes
+         * 4. Veify the message with wallet address and signature: `bitcoinMessage.verify(message, address, signature)`
+         * 5. Create the block and add it to the chain
+         * 6. Resolve with the block added.
+         * @param {*} address 
+         * @param {*} message 
+         * @param {*} signature 
+         * @param {*} star 
      */
     submitStar(address, message, signature, star) {
         let self = this;
         return new Promise(async (resolve, reject) => {
+            // time less than 5m?
+            let messageTime = parseInt(message.split(':')[1])
+            let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+            let timeDifference = currentTime - messageTime;
             
+            if(timeDifference >= 5) {
+                reject('signature expired');
+            }
+
+            // if verified, add block w star and resolve
+            if(bitcoinMessage.verify(message, address, signature)) {
+                this.chain.addBlock(star).then(function(block) {
+                    resolve(block);
+                });
+            }
+            else {
+                reject('failed to verify message');
+            }
         });
     }
 
