@@ -167,7 +167,7 @@ You can check in your terminal the the Express application is listening in the P
     `getStarsByWalletAddress (address)`
     /**
      * This method will return a Promise that will resolve with an array of Stars objects existing in the chain 
-     * and are belongs to the owner with the wallet address passed as parameter.
+     * and that belong to the owner having wallet address that was passed as a parameter.
      * 
      * @param {*} address 
      */

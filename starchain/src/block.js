@@ -66,7 +66,7 @@ class Block {
             let decodedBody = hex2ascii(this.body);
 
             if (this.height > 0) {
-                resolve(decodedBody);
+                resolve(JSON.parse(decodedBody));
             }
             else {
                 reject();
@@ -74,12 +74,14 @@ class Block {
         });
     }
 
-    incrementHeight() {
-        this.height++;
+    decodeData() {
+        let decodedBody = hex2ascii(this.body);
+        let parsedBody = JSON.parse(decodedBody);
+        return parsedBody.data;
     }
 
-    generateInitialHash() {
-        this.hash = SHA256(JSON.stringify(this)).toString();
+    incrementHeight() {
+        this.height++;
     }
 }
 
