@@ -146,13 +146,13 @@ class Blockchain {
             let newBlock = new BlockClass.Block(newBlockData);
 
             // if verified, add block w star and resolve
-            // try {
-            //     let verificationResult = bitcoinMessage.verify(message, address, signature)
-            // } catch (error) {
-            //     reject("error in verification")
-            // }
-            // if(verificationResult) {
-            if(true) {
+            try {
+                let verificationResult = bitcoinMessage.verify(message, address, signature)
+            } catch (error) {
+                reject("error in verification")
+            }
+
+            if(verificationResult) {
                 this.addBlock(newBlock).then(function(block) {
                     resolve(block);
                 });
@@ -224,12 +224,14 @@ class Blockchain {
      */
     validateChain() {
         let self = this;
-        let errorLog = [];
         return new Promise(async (resolve, reject) => {
-            
+            let results = this.chain.map(function(block) {
+                 block.validate()
+            }).filter(res => res != undefined);
+
+            resolve(results);
         });
     }
-
 }
 
 module.exports.Blockchain = Blockchain;   

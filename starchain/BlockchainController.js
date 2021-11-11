@@ -16,6 +16,7 @@ class BlockchainController {
         this.submitStar();
         this.getBlockByHash();
         this.getStarsByOwner();
+        this.validate();
         this.getHello();
     }
 
@@ -115,6 +116,24 @@ class BlockchainController {
                 return res.status(500).send("Block Not Found! Review the Parameters!");
             }
             
+        });
+    }
+
+    validate() {
+        this.app.get("/validate", async (req, res) => {
+                const address = req.params.address;
+                try {
+                    let results = await this.blockchain.validateChain();
+                    let isValidated = results.length === 0;
+                    let reply = {
+                        "validated": isValidated,
+                        "errors": results
+                    }
+
+                    return res.status(200).send(reply);
+                } catch (error) {
+                    return res.status(500).send("critical error during validation");
+                }
         });
     }
 

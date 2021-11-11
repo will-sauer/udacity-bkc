@@ -43,10 +43,10 @@ class Block {
             let calcHash = SHA256(JSON.stringify(dupeBlock)).toString();
             
             if (this.hash == calcHash) {
-                resolve(true);
+                resolve();
             }
             else {
-                reject(false);
+                reject('hashes don\'t match');
             }
         });
     }
